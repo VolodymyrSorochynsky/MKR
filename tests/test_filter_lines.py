@@ -1,5 +1,4 @@
 import pytest
-import os
 from main import filter_lines
 
 
@@ -7,9 +6,9 @@ from main import filter_lines
 def input_file(tmpdir):
     file_path = tmpdir.join("input.txt")
     with open(file_path, "w") as f:
-        f.write("cat, dog, duck\n")
+        f.write("cat, lamp, duck\n")
         f.write("dog, ball, tea\n")
-        f.write("hair, head, lamp\n")
+        f.write("hair, dog, lamp\n")
         f.write("ball, cat, dog\n")
         f.write("box, tea, lamp\n")
     return file_path
@@ -20,6 +19,11 @@ def output_file(tmpdir):
     return tmpdir.join("filtered.txt")
 
 
+@pytest.mark.parametrize("keyword, expected_lines", [
+    ("cat", ["cat, lamp, duck\n", "ball, cat, dog\n"]),
+    ("cap", []),
+    ("lamp", ["cat, lamp, duck\n", "hair, dog, lamp\n", "box, tea, lamp\n"]),
+])
 def test_filter_lines(input_file, output_file, keyword, expected_lines):
     filter_lines(input_file, keyword, output_file)
     with open(output_file, "r") as f:
