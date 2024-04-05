@@ -31,3 +31,10 @@ def test_filter_lines(input_file, output_file, keyword, expected_lines):
     assert len(lines) == len(expected_lines)
     for line in expected_lines:
         assert line in lines
+
+
+def test_filter_lines_error(tmpdir):
+    input_file = tmpdir.join("file_does_not_exist.txt")
+    output_file = tmpdir.join("also_does_not_exist.txt")
+    with pytest.raises(FileNotFoundError):
+        filter_lines(input_file, "example", output_file)
